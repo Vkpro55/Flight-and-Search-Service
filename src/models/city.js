@@ -13,8 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       /*== City can have multiple airports  ==*/
       this.hasMany(models.Airport, {
         foreignKey: "cityId",
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        onDelete: "CASCADE",
       })
     }
   }
