@@ -6,7 +6,6 @@ const AppError = require("../utils/errors/app-errors");
 /*== Create new object ==*/
 const airplaneRepository = new AirplaneRepository();
 
-/*== This service function will create a new airplane==*/
 const createAirplane = async (data) => {
     try {
         const airplane = await airplaneRepository.create(data);
@@ -26,8 +25,6 @@ const createAirplane = async (data) => {
     }
 }
 
-
-/*== This service function will create a get all the available airplanes==*/
 const getAirplanes = async () => {
     try {
         const airplanes = await airplaneRepository.getAll();

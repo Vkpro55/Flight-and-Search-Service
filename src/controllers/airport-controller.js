@@ -1,24 +1,25 @@
+
 const { StatusCodes } = require("http-status-codes");
 
-const { AirplaneService } = require("../services");
+const { AirportService } = require("../services");
 const { SuccessResponse, ErrorResponse } = require("../utils/common");
 
 
 /*==
-POST: /airplanes
-req-body: {modelNumber: "airnbus320", capacity: 200}
+POST: /airports
+req-body: {name: "Kempegowda International Airport". code: "BLR", address; "", cityId: }
 ==*/
-const createAirplane = async (req, res) => {
+const createAirport = async (req, res) => {
     try {
-
-        const { modelNumber, capacity } = req.body;
         const data = {
-            modelNumber: modelNumber,
-            capacity: capacity
+            name: req.body.name,
+            code: req.body.code,
+            address: req.body.address,
+            cityId: req.body.cityId
         }
 
-        const airplane = await AirplaneService.createAirplane(data);
-        SuccessResponse.data = airplane;
+        const airport = await AirportService.createAirport(data);
+        SuccessResponse.data = airport;
 
         return res
             .status(StatusCodes.CREATED)
@@ -35,13 +36,13 @@ const createAirplane = async (req, res) => {
 
 
 /*==
-GET: /airplanes
+GET: /airports
 req-body: {}
 ==*/
-const getAirplanes = async (req, res) => {
+const getAirpopts = async (req, res) => {
     try {
-        const airplanes = await AirplaneService.getAirplanes();
-        SuccessResponse.data = airplanes;
+        const airports = await AirportService.getAirpopts();
+        SuccessResponse.data = airports;
 
         return res
             .status(StatusCodes.OK)
@@ -56,38 +57,38 @@ const getAirplanes = async (req, res) => {
 }
 
 /*==
-GET: /airplanes/:id
+GET: /airports/:id
 req-body: {}
 ==*/
-const getAirplane = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const airplane = await AirplaneService.getAirplane(id);
-        SuccessResponse.data = airplane;
-
-        return res
-            .status(StatusCodes.OK)
-            .json(SuccessResponse);
-    } catch (error) {
-        ErrorResponse.error = error;
-
-        return res
-            .status(error.statusCode)
-            .json(ErrorResponse);
-    }
-}
-
-
-
-/*==
-DELETE: /airplanes/:id
-req-body: {}
-==*/
-const destroyAirplane = async (req, res) => {
+const getAirport = async (req, res) => {
     try {
         const id = req.params.id;
-        const airplane = await AirplaneService.destroyAirplane(id);
-        SuccessResponse.data = airplane;
+        const airport = await AirportService.getAirport(id);
+        SuccessResponse.data = airport;
+
+        return res
+            .status(StatusCodes.OK)
+            .json(SuccessResponse);
+    } catch (error) {
+        ErrorResponse.error = error;
+
+        return res
+            .status(error.statusCode)
+            .json(ErrorResponse);
+    }
+}
+
+
+
+/*==
+DELETE: /airports/:id
+req-body: {}
+==*/
+const destroyAirport = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const airport = await AirportService.destroyAirport(id);
+        SuccessResponse.data = airport;
 
         return res
             .status(StatusCodes.OK)
@@ -103,17 +104,16 @@ const destroyAirplane = async (req, res) => {
 
 
 /*==
-PATCH: /airplanes/:id
-req-body: {capacity: 200}
+PATCH: /airports/:id
+req-body: {name:"" or address:"" or code:""}
 ==*/
-const updateAirplane = async (req, res) => {
+const updateAirport = async (req, res) => {
     try {
         const id = req.params.id;
         const updateData = req.body;
-        /*==  Check whether you pass atleast one field to update ==*/
 
-        const airplane = await AirplaneService.updateAirplane(id, updateData);
-        SuccessResponse.data = airplane;
+        const aiport = await AirportService.updateAirport(id, updateData);
+        SuccessResponse.data = aiport;
 
         return res
             .status(StatusCodes.OK)
@@ -129,9 +129,9 @@ const updateAirplane = async (req, res) => {
 
 
 module.exports = {
-    createAirplane,
-    getAirplanes,
-    getAirplane,
-    destroyAirplane,
-    updateAirplane
+    createAirport,
+    getAirpopts,
+    getAirport,
+    destroyAirport,
+    updateAirport
 };
