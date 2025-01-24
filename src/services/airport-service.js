@@ -63,14 +63,6 @@ const updateAirport = async (id, data) => {
         const response = await airportRepository.update(id, data);
         return response;
     } catch (error) {
-        if (error.name === "SequelizeValidationError") {
-            let explanation = [];
-            error.errors.forEach((err) => {
-                explanation.push(err.message);
-            });
-            throw new AppError(explanation, StatusCodes.BAD_REQUEST);
-        }
-
         if (error.statusCode === StatusCodes.NOT_FOUND) {
             throw new AppError("The airport you requested to update is not found", error.statusCode);
         }
