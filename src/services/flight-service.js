@@ -5,9 +5,6 @@ const { Flightrepository } = require("../repositories");
 const { DateTimeHelper } = require("../utils/helpers");
 const { FlightFilterHelper } = require("../utils/helpers");
 
-const { getAirplane } = require("./airplane-service");
-const { getAirport } = require("./airport-service");
-
 /*== Create new object ==*/
 const flightRepository = new Flightrepository();
 
@@ -51,25 +48,9 @@ const getAllFlights = async (query) => {
 
     try {
         let flights = await flightRepository.getAll(customFilter, sortFilters);
-
-        let updatedFlights = await Promise.all(flights.map(async (flight) => {
-            try {
-                const airplaneData = await getAirplane(flight.airplaneId);
-                const departureAirportData = await getAirport(flight.departureAirportId);
-                const arrivalAirportData = await getAirport(flight.arrivalAirportId);
-
-                flight.airplaneId = airplaneData.modelNumber;
-                flight.departureAirportId = departureAirportData.name;
-                flight.arrivalAirportId = arrivalAirportData.name;
-
-                return flight;
-            } catch (error) {
-                throw new AppError("Error processing flight", StatusCodes.INTERNAL_SERVER_ERROR);
-            }
-        }));
-
-        return updatedFlights;
+        return flights;
     } catch (error) {
+        console.log("Error is: ", error);
         throw new AppError("Cannot fetch data of all the flights", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }

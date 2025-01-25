@@ -29,24 +29,13 @@ class CrudRepository {
 
 
     async get(pk) {
-        if (typeof (pk) === "string") {
-            const response = await this.model.findOne({
-                where: {
-                    code: pk
-                }
-            });
-            if (!response) {
-                throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
-            }
-            return response;
+
+        const response = await this.model.findByPk(pk);
+        if (!response) {
+            throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
         }
-        else {
-            const response = await this.model.findByPk(pk);
-            if (!response) {
-                throw new AppError("Resource not found", StatusCodes.NOT_FOUND);
-            }
-            return response;
-        }
+        return response;
+
     }
 
     async getAll() {
