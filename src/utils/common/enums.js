@@ -7,6 +7,16 @@ const SEAT_TYPE = {
     FIRST_CLASS: "first-class"
 }
 
+const SEAT_COLUMNS = {
+    A: "a",
+    B: "b",
+    C: "c",
+    D: "d",
+    E: "e",
+    F: "f"
+}
+
 module.exports = {
-    SEAT_TYPE
+    SEAT_TYPE,
+    SEAT_COLUMNS
 }
