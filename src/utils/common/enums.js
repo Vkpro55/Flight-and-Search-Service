@@ -13,7 +13,8 @@ const SEAT_COLUMNS = {
     C: "c",
     D: "d",
     E: "e",
-    F: "f"
+    F: "f",
+    G: "g"
 }
 
 const SEAT_STATUS = {
