@@ -39,6 +39,11 @@ module.exports = (sequelize, DataTypes) => {
       values: [BUSINESS, ECONOMY, PREMIUM_ECONOMY, FIRST_CLASS],
       defaultValue: BUSINESS,
       allowNull: false
+    },
+    is_Available: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   }, {
     sequelize,
