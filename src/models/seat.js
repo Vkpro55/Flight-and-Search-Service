@@ -5,6 +5,7 @@ const {
 
 const { Enum } = require("../utils/common");
 const { BUSINESS, ECONOMY, PREMIUM_ECONOMY, FIRST_CLASS } = Enum.SEAT_TYPE;
+const { BOOKED, AVAILABLE } = Enum.SEAT_STATUS;
 
 module.exports = (sequelize, DataTypes) => {
   class Seat extends Model {
@@ -15,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
      */
 
     static associate(models) {
-      this.belongsTo(models.Airplane, {
-        foreignKey: "airplaneId",
+      this.belongsTo(models.SeatMap, {
+        foreignKey: "seatmapId",
         onDelete: "CASCADE"
       })
     }
   }
   Seat.init({
-    airplaneId: {
+    seatmapId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -30,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    cole: {
+    col: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -40,9 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: BUSINESS,
       allowNull: false
     },
-    is_Available: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    status: {
+      type: DataTypes.ENUM,
+      values: [BOOKED, AVAILABLE],
+      defaultValue: AVAILABLE,
       allowNull: false
     }
   }, {

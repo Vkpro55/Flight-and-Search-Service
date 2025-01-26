@@ -16,7 +16,13 @@ const SEAT_COLUMNS = {
     F: "f"
 }
 
+const SEAT_STATUS = {
+    BOOKED: "booked",
+    AVAILABLE: "available"
+}
+
 module.exports = {
     SEAT_TYPE,
-    SEAT_COLUMNS
+    SEAT_COLUMNS,
+    SEAT_STATUS
 }
