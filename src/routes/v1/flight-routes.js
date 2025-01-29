@@ -15,4 +15,10 @@ router.get("/", FlightController.getAllFlights);
 /*== route: GET: /api/v1/flights/:id ==*/
 router.get("/:id", FlightController.getFlight);
 
+
+/*== route: PATCH: /api/v1/flights/:id/seats ==*/
+router.patch("/:id/seats",
+    FlightMiddlewares.validateUpdateSeatRequest,
+    FlightController.updateSeats);
+
 module.exports = router;

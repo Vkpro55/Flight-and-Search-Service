@@ -1,6 +1,8 @@
 const CrudRepository = require("./crud-repository");
 const { Flight, Airplane, Airport, City, sequelize } = require("../models");
 
+const { addRowLockonFlight } = require("./queries");
+
 class FlightRepository extends CrudRepository {
     constructor() {
         super(Flight);
@@ -93,6 +95,34 @@ class FlightRepository extends CrudRepository {
         return response;
     }
 
+
+
+    /**
+     * Problem: First this is part of transaction query
+     *          - two users want to decrese the flight seats at the same time, put row-level lock: Pessimistic Concurrenyc Lock: Raw Queries in Sequelize 
+     */
+    async updateRemainingSeat({ flightId, seats, dec = true }) {
+
+        await addRowLockonFlight(flightId);
+
+        const flightInstance = await Flight.findByPk(flightId);
+
+        if (dec) {
+            await flightInstance.decrement('totalSeats', { by: seats });
+        }
+        else {
+            await flightInstance.increment('totalSeats', { by: seats });
+        }
+
+        /**
+         * It will update the database but not the instance that you are getting
+         * save() => when you changed the data manully and you want the changes data is effected in DB as well. => UPDATE flights SET totalSeats = ? WHERE id = flightId?;
+         * reload() =>when some operation changes the DB data, and you want latest data. => SELECT * FROM flights WHERE id = flightId?;
+         */
+
+        await flightInstance.reload();
+        return flightInstance;
+    }
 };
 
 
