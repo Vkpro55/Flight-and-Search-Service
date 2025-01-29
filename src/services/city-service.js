@@ -19,7 +19,7 @@ const createCity = async (data) => {
             });
             throw new AppError(explanation, StatusCodes.BAD_REQUEST);
         }
-        /*== TypeError ==*/
+
         throw new AppError("Cannot create a new City object", StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }

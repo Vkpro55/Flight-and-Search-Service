@@ -34,8 +34,8 @@ const getAirpopts = async () => {
 
 const getAirport = async (id) => {
     try {
-        const airports = await airportRepository.get(id);
-        return airports;
+        const airport = await airportRepository.get(id);
+        return airport;
     } catch (error) {
         if (error.statusCode === StatusCodes.NOT_FOUND) {
             throw new AppError("The airport you requested is not found", error.statusCode);
