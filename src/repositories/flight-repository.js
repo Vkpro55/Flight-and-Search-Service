@@ -1,7 +1,8 @@
 const CrudRepository = require("./crud-repository");
 const { Flight, Airplane, Airport, City, sequelize } = require("../models");
 
-const { addRowLockonFlight } = require("./queries");
+const { addRowLockOnFlights } = require("./queries");
+const db = require("../models");
 
 class FlightRepository extends CrudRepository {
     constructor() {
@@ -101,27 +102,32 @@ class FlightRepository extends CrudRepository {
      * Problem: First this is part of transaction query
      *          - two users want to decrese the flight seats at the same time, put row-level lock: Pessimistic Concurrenyc Lock: Raw Queries in Sequelize 
      */
+
     async updateRemainingSeat({ flightId, seats, dec = true }) {
+        const transaction = await db.sequelize.transaction();
+        try {
+            await db.sequelize.query(addRowLockOnFlights(flightId));
+            const flight = await Flight.findByPk(flightId);
+            if (+dec) {
+                await flight.decrement('totalSeats', { by: seats }, { transaction: transaction });
+            } else {
+                await flight.increment('totalSeats', { by: seats }, { transaction: transaction });
+            }
 
-        await addRowLockonFlight(flightId);
+            /**
+              * It will update the database but not the instance that you are getting
+              * save() => when you changed the data manully and you want the changes data is effected in DB as well. => UPDATE flights SET totalSeats = ? WHERE id = flightId?;
+              * reload() =>when some operation changes the DB data, and you want latest data. => SELECT * FROM flights WHERE id = flightId?;
+              */
+            await flight.reload({ transaction: transaction });
 
-        const flightInstance = await Flight.findByPk(flightId);
-
-        if (dec) {
-            await flightInstance.decrement('totalSeats', { by: seats });
+            await transaction.commit();
+            return flight;
+        } catch (error) {
+            await transaction.rollback();
+            throw error;
         }
-        else {
-            await flightInstance.increment('totalSeats', { by: seats });
-        }
 
-        /**
-         * It will update the database but not the instance that you are getting
-         * save() => when you changed the data manully and you want the changes data is effected in DB as well. => UPDATE flights SET totalSeats = ? WHERE id = flightId?;
-         * reload() =>when some operation changes the DB data, and you want latest data. => SELECT * FROM flights WHERE id = flightId?;
-         */
-
-        await flightInstance.reload();
-        return flightInstance;
     }
 };
 
