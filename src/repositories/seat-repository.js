@@ -28,7 +28,7 @@ class SeatRepository extends CrudRepository {
         });
 
         if (!seatDetails) {
-            return new AppError("Not fund the resources", StatusCodes.NOT_FOUND);
+            throw new AppError("Not fund the resources", StatusCodes.NOT_FOUND);
         }
 
         return seatDetails;
