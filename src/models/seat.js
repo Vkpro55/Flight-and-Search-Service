@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.SeatMap, {
         foreignKey: "seatmapId",
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        as: "seatmap_detail"
       })
     }
   }

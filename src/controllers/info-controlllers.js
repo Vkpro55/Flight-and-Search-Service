@@ -4,7 +4,7 @@ const Info = (req, res) => {
 
     return res.status(StatusCodes.OK).json({
         "success": true,
-        "message": "API is Live",
+        "message": "Flights API is Live",
         "error": {},
         "data": {}
     });

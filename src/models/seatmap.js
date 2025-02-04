@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.Airplane, {
         foreignKey: "airplaneId",
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
+        as: "Airplane_details"
       });
 
       this.hasMany(models.Seat, {

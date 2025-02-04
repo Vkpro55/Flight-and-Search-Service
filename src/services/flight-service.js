@@ -12,7 +12,7 @@ const createFlight = async (data) => {
     try {
         /*== 
         Sequelize stores dates in the database in UTC by default to ensure consistency across systems and time zones.
-        input: "2025-01-28 11:00:00" => iy will consider the local time zone: "2025-01-28 11:00:00 + 5:30"
+        input: "2025-01-28 11:00:00" => it will consider the local time zone: "2025-01-28 11:00:00 + 5:30"
         output: "2025-01-28T05:30:00.000Z"
         ==*/
         const { departureTime, arrivalTime } = data;

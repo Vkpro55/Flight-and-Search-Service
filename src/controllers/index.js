@@ -3,5 +3,6 @@ module.exports = {
     AirplaneController: require("./airplane-controller"),
     CityController: require("./city-controller"),
     AirportControler: require("./airport-controller"),
-    FlightController: require("./flight-controller")
+    FlightController: require("./flight-controller"),
+    SeatController: require("./seat-controller"),
 };
