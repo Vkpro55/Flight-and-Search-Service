@@ -3,6 +3,6 @@ const { SeatController } = require("../../controllers");
 
 const router = express.Router();
 
-router.get("/:id", SeatController.seatDetails);
+router.patch("/:id", SeatController.seatUpdate);
 
 module.exports = router;

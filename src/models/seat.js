@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       values: [BOOKED, AVAILABLE],
       defaultValue: AVAILABLE,
       allowNull: false
-    }
+    },
   }, {
     sequelize,
     modelName: 'Seat',

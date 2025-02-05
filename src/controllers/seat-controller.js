@@ -2,24 +2,25 @@ const { StatusCodes } = require("http-status-codes");
 const { SeatService } = require("../services");
 const { SuccessResponse, ErrorResponse } = require("../utils/common");
 
-async function seatDetails(req, res) {
+async function seatUpdate(req, res) {
     try {
-        const seat = await SeatService.seatDetails(req.params.id);
+        const response = await SeatService.updateSeat({
+            seatId: req.params.id,
+            status: req.body.status
+        });
 
-        SuccessResponse.data = seat;
+        SuccessResponse.data = response;
         return res
             .status(StatusCodes.OK)
             .json(SuccessResponse);
     } catch (error) {
         ErrorResponse.error = error;
-        console.log(error);
         return res
             .status(error.statusCode)
             .json(ErrorResponse);
     }
 }
 
-
 module.exports = {
-    seatDetails
+    seatUpdate
 }
