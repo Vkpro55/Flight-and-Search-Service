@@ -1,75 +1,134 @@
-This is a base Node.js project template, which anyone can use as it has been prepared by keeping some of the most importnat code principles and project management recommendations.
+# Flight Booking System
 
-"src"=> Inside thr src folder all the actual source code regarding the project will reside. This will not include any kind of tests (You might want to make seprate test folder).
+The modern airline industry faces critical challenges—double bookings, payment failures, and last-minute seat conflicts—leading to frustrated passengers and revenue losses for airlines.
 
-Let's take a look inside "src" folder:
+Instead of just building a simple booking system, we focused on understanding and solving these issues using well-defined optimistic and pessimistic booking strategies, ensuring idempotent payments, and preventing race conditions when the last seat is booked.
 
-- `config` => In this folder any set-up of library or modules is done. For example: setting up "dotenv" so that we can use environmental variables anywhere in the application in more cleaner fashion.
+## Documentation
 
-- `routes` => In this folder, we register a route and corresponding middlewares and controllers to it.
+You can explore the detailed design and code documentation below:
 
-- `middlewares` => They are just interceptors for incoming request, where we can write our validations, authentications etc.
+- [Detailed Design and Code Doc](link-to-google-doc)
 
-- `controllers` => They are kind of last middlewares only or last layer of middlewares, where we write our business logic regarding the specific routes. In the controllers we just receive the incoming request and data and then pass it to the business layer. And once business layer returns an output, we structute the API response in controllers.
+## Table of Contents
 
-- `repositories` => This folder contains all the logic using which we can interact with DB by wriying queries, all the raw queries or ORM queries will go here.
+- [System Architecture](#system-design--flight-booking-microservices-architecture)
+- [Key Engineering Problems](#engineering-challenges-addressed)
+- [Tech Stacks](#technology-stack)
+- [Services](#services)
+- [Installation](#installation)
 
-- `services` => This folder contains the business logic and interact with repositories for data from DB.
+## System Design – Flight Booking Microservices Architecture
 
-- `utils` => constains helper methods, error classes etc.
+![System Architecture](./images/Architectural_Design_of_Full_Application.png)
 
-### Setup the project
+## Engineering Challenges Addressed
 
-- Download the template form this git repo.
-- In the root directory create a `.env` file and put following env variables.
+This project tackles three key engineering challenges:
+
+1. **Eliminating Concurrent Booking Conflicts:** We developed a robust solution to prevent double-booking of seats during periods of high demand. Our system accurately allocates seats based on a prioritized approach (pessimistic locking), ensuring fairness and preventing frustrating user experiences where multiple users believe they've successfully booked the same seat. This is particularly crucial during peak booking times and significantly improves user satisfaction.
+   ![System Architecture](./images/1.png)
+
+2. **Preventing "Last Seat" Double-Bookings:** A critical failure point in flight booking systems involves the simultaneous booking attempts for the final remaining seat. Without proper locking mechanisms, both users could receive booking confirmations, leading to a system inconsistency and requiring manual intervention for refunds and customer support. This project implements a robust solution to prevent this scenario, ensuring that only one user is allocated the last seat.
+
+3. **Ensuring Reliable and Idempotent Payment Processing:** We've built a payment gateway integration that is completely idempotent. This ensures that regardless of network hiccups or repeated requests, payments are processed correctly only once, maintaining data integrity and preventing financial errors. This robust design significantly reduces the risk of financial discrepancies and customer disputes.
+   ![System Architecture](./images/2.png)
+
+## Technology Stack
+
+- **Backend:** Node.js with Express.js
+- **Database:** MySQL with Sequelize ORM
+- **Message Queue:** RabbitMQ (used in Notification services for asynchronous communication with amqplib library)
+- **Proxy:** Http-Proxy with Http-rate-limit
+- **Auth:** Bcrypt with Jsonwebtoken
+- **Other Libraries:** Axios (HTTP client), Winston (logging), dotenv (environment variables)
+
+## Services
+
+This project is composed of several microservices:
+
+- **Flight Repo:** Manages flight data, including schedules, seat availability, and pricing. It handles user flight searches and filters based on criteria, ensuring accurate flight information.
+  - [Link to Flight Search Service Repo](https://github.com/Vkpro55/Node.js-03)
+- **Booking Service:** Handles core booking logic, including seat availability and reservation.
+  - [Link to Booking Service Repo](https://github.com/Vkpro55/Flight-Booking-Service)
+- **Flight API Gateway:** Acts as a single entry point for all client requests.
+  - [Link to Flight API Gateway Repo](https://github.com/Vkpro55/API-Gateway_flights)
+- **Notification Service:** Manages flight booking confirmations and other notifications.
+  - [Link to Notification Service Repo](https://github.com/Vkpro55/Airline-Notification-Service)
+
+## Overview of Src folder for Developers
+
+Here’s a brief overview of the "src" folder structure:
+
+- config: Setups for libraries and modules, e.g., "dotenv" for environment variables.
+- routes: Registers routes, middlewares, and controllers.
+- middlewares: Handles interceptors for validations, authentication, etc.
+- controllers: Contains business logic for routes, structures API responses.
+- repositories: Interacts with the DB using raw or ORM queries.
+- services: Contains business logic and communicates with repositories.
+- utils: Helper methods, error classes, and utility functions.
+
+## Installation
+
+- Clone the repository
+
+  `bash`
+
   ```
-    PORT= <PORT number of your choice> For Example: PORT= 3000 || 5000 || 8000
-  ```
-- Install the dependencies:
-  ```
-    npm install
-  ```
-- Indise the `src/config` folder, create a file named as `config.json` and write the following code:
-
-  ```
-    {
-      "development": {
-       "username": "root",
-       "password": null,
-       "database": "database_development",
-       "host": "127.0.0.1",
-       "dialect": "mysql"
-      },
-      "test": {
-        "username": "root",
-        "password": null,
-        "database": "database_test",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
-      },
-      "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
-      }
-    }
+  git clone https://github.com/Vkpro55/Node.js-03.git
   ```
 
-- Go inside the `src` folder and run following command:
+- Install Install Dependencies
+
+  `bash`
 
   ```
-    npx sequelize init
+  npm install
   ```
 
-- If you are setting up your development environment, then write the username and password of your db and in dialect mention the type of database your are using. For Example:
-  ```
-    one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle'
-  ```
-- If you are setting up the test or production environment, then specify the host(Url where your DB is hosted).
+- Create .env file in root directory
 
-- Start the development server:
+  `.env`
+
   ```
-    npm run start
+  PORT=3000 || 4000 || 8000
   ```
+
+- Configure Sequelize ORM with Sequelize-CLI and MySQL Database
+
+  `run`
+
+  ```
+  npx npx sequelize init
+  ```
+
+  ```
+  {
+   "development": {
+     "username": "root",
+     "password": "root_password",
+     "database": "database_name",
+     "host": "host_url",
+     "dialect": "mysql"
+   },
+   "test": {
+     "username": "root",
+     "password": null,
+     "database": "database_test",
+     "host": "127.0.0.1",
+     "dialect": "mysql"
+   },
+   "production": {
+     "username": "root",
+     "password": null,
+     "database": "database_production",
+     "host": "127.0.0.1",
+     "dialect": "mysql"
+   }
+  }
+
+  ```
+
+## Important Note: Build Your Own Version
+
+Do not copy the project directly. If you want to build your own version, start by thoroughly reading the documentation. Understand the architecture and functionality before implementing your own version. This will help you build a customized solution that aligns with your learning goals and requirements.
