@@ -8,31 +8,38 @@ Instead of just building a simple booking system, we focused on understanding an
 
 You can explore the detailed design and code documentation below:
 
-- [Detailed Design and Code Doc](link-to-google-doc)
+- [Detailed Design and Code Doc](https://docs.google.com/document/d/1JCH41-1cRlfE5Qo2_oDjnwRLJXbYDAZT8AQJtBJNVGk/edit?usp=sharing)
 
 ## Table of Contents
 
 - [System Architecture](#system-design--flight-booking-microservices-architecture)
 - [Key Engineering Problems](#engineering-challenges-addressed)
 - [Tech Stacks](#technology-stack)
+- [Features](#features)
 - [Services](#services)
 - [Installation](#installation)
 
 ## System Design – Flight Booking Microservices Architecture
 
 ![System Architecture](./images/Architectural_Design_of_Full_Application.png)
+![System Architecture](./images/arch2.png)
 
 ## Engineering Challenges Addressed
 
 This project tackles three key engineering challenges:
 
 1. **Eliminating Concurrent Booking Conflicts:** We developed a robust solution to prevent double-booking of seats during periods of high demand. Our system accurately allocates seats based on a prioritized approach (pessimistic locking), ensuring fairness and preventing frustrating user experiences where multiple users believe they've successfully booked the same seat. This is particularly crucial during peak booking times and significantly improves user satisfaction.
-   ![System Architecture](./images/1.png)
+   ![System Architecture](./images/3.png)
+   ![System Architecture](./images/4.png)
 
 2. **Preventing "Last Seat" Double-Bookings:** A critical failure point in flight booking systems involves the simultaneous booking attempts for the final remaining seat. Without proper locking mechanisms, both users could receive booking confirmations, leading to a system inconsistency and requiring manual intervention for refunds and customer support. This project implements a robust solution to prevent this scenario, ensuring that only one user is allocated the last seat.
+   ![System Architecture](./images/5.png)
+   ![System Architecture](./images/6.png)
+   ![System Architecture](./images/7.png)
 
 3. **Ensuring Reliable and Idempotent Payment Processing:** We've built a payment gateway integration that is completely idempotent. This ensures that regardless of network hiccups or repeated requests, payments are processed correctly only once, maintaining data integrity and preventing financial errors. This robust design significantly reduces the risk of financial discrepancies and customer disputes.
-   ![System Architecture](./images/2.png)
+   ![System Architecture](./images/8.png)
+   ![System Architecture](./images/9.png)
 
 ## Technology Stack
 
@@ -43,12 +50,21 @@ This project tackles three key engineering challenges:
 - **Auth:** Bcrypt with Jsonwebtoken
 - **Other Libraries:** Axios (HTTP client), Winston (logging), dotenv (environment variables)
 
+## Features
+
+- It is developed on the Microservice Architecture.
+- Implemented JWT Token authentication mechanism for authentication and authorisation of users.
+- Implemented API Gateway which authenticates thetoken and also apply Rate Limiting does which basically works as an Reverse Proxy and helps in preventing Dos Attacks.
+- Implemented Caching(Cache Aside Pattern) in the Flights Search Serviceusing Redis there by optimizing the response time.
+- Implemented CronJobs in Remainder Service which automatically delete the already sent emails to the customers and automatically sends an email to customer.
+- Implemented interservice synchronous communication using HTTP(REST)APIs and also asychronous communication using Message Brokers like RabbitMQ.
+
 ## Services
 
 This project is composed of several microservices:
 
 - **Flight Repo:** Manages flight data, including schedules, seat availability, and pricing. It handles user flight searches and filters based on criteria, ensuring accurate flight information.
-  - [Link to Flight Search Service Repo](https://github.com/Vkpro55/Node.js-03)
+  - [Link to Flight Search Service Repo](https://github.com/Vkpro55/Flight-and-Search-Service)
 - **Booking Service:** Handles core booking logic, including seat availability and reservation.
   - [Link to Booking Service Repo](https://github.com/Vkpro55/Flight-Booking-Service)
 - **Flight API Gateway:** Acts as a single entry point for all client requests.
