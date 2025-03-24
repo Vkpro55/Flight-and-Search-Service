@@ -21,8 +21,7 @@ You can explore the detailed design and code documentation below:
 
 ## System Design – Flight Booking Microservices Architecture
 
-![System Architecture](./images/Architectural_Design_of_Full_Application.png)
-![System Architecture](./images/arch2.png)
+![System Architecture](./images/hld.png)
 
 ## Engineering Challenges Addressed
 
